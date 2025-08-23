@@ -137,6 +137,7 @@ Cada pasta tem instruções específicas. **Leia com atenção!**
 # Commite suas alterações
 git add .
 git commit -m "Resolução dos desafios técnicos..." # Exemplo
+git push # Pra não esquecerem né XD
 ```
 
 ### Vídeos
