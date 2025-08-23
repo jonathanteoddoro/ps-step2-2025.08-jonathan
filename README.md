@@ -119,7 +119,7 @@ Cada pasta tem instruções específicas. **Leia com atenção!**
 
 1. **Introdução rápida** (30s): Resumo do que entendeu do desafio
 2. **Explicação dos desafios** (2-4 min): Raciocínio + decisões
-3. **Conclusão** (30ms): Aprendizado/dificuldades
+3. **Conclusão** (30min): Aprendizado/dificuldades
 
 ## 📝 Como Entregar
 
