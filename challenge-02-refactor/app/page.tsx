@@ -3,8 +3,7 @@
 
 import { useState } from 'react'
 import { useDocuments } from '../hooks/useDocuments'
-import { filterDocuments, sortDocuments } from '../hooks/useFilterAndSort'
-import { formatDate, getAllTags, getCategoryColor } from '../utils/documentUtils'
+import { formatDate, getAllTags, getCategoryColor, filterDocuments, sortDocuments } from '../utils/documentUtils'
 import DocumentCard from '../components/DocumentCard'
 import SearchBar from '../components/SearchBar'
 import CategoryFilter from '../components/CategoryFilter'
