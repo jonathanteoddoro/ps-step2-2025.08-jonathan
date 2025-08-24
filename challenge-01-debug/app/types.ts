@@ -11,6 +11,7 @@ export type User = {
 export type ApiResponse = {
 	users: User[]
 	total: number
+	timestamp: string
 }
 
 export type UserStatus = 'online' | 'offline' | 'away'

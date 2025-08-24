@@ -12,33 +12,34 @@ export default function TeamDashboard() {
 	const [lastUpdate, setLastUpdate] = useState<string>('')
 	const [windowWidth, setWindowWidth] = useState(0)
 
-	const fetchUsers = async () => {
-		setLoading(true)
-		setError('')
+	const fetchUsers = useCallback(async () => {
+        setLoading(true)
+        setError('')
 
-		try {
-			const url = selectedDepartment ? `/api/users?department=${selectedDepartment}` : '/api/users'
-			const response = await fetch(url)
-			const data = await response.json()
-			setUsers(data.users || [])
-			setLastUpdate(new Date().toLocaleString())
-		} catch (error) {
-			console.log('Error fetching users')
-			setError('Failed to load users. Please try again.')
-		} finally {
-			setLoading(false)
-		}
-	}
+        try {
+            const url = selectedDepartment ? `/api/users?department=${selectedDepartment}` : '/api/users'
+            const response = await fetch(url)
+            const data = await response.json()
+            setUsers(data.users || [])
+            setLastUpdate(new Date().toLocaleString())
+        } catch (error) {
+            console.log('Error fetching users')
+            setError('Failed to load users. Please try again.')
+        } finally {
+            setLoading(false)
+        }
+    }, [selectedDepartment])
 
-	useEffect(() => {
-		fetchUsers()
+    useEffect(() => {
+        fetchUsers()
 
-		const handleResize = () => {
-			setWindowWidth(window.innerWidth)
-		}
-		window.addEventListener('resize', handleResize)
-		handleResize()
-	}, [fetchUsers])
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth)
+        }
+        window.addEventListener('resize', handleResize)
+        handleResize()
+        return () => window.removeEventListener('resize', handleResize)
+    }, [fetchUsers])
 
 	const handleUserSelect = (user: User) => {
 		setSelectedUser(user)
@@ -53,12 +54,20 @@ export default function TeamDashboard() {
 		fetchUsers()
 	}
 
-	const handleDeleteUser = (userId: number) => {
-		const currentUsers = users
-		const userIndex = currentUsers.findIndex((u) => u.id === userId)
-		if (userIndex > -1) {
-			currentUsers.splice(userIndex, 1)
-			setUsers(currentUsers)
+	const handleDeleteUser = async (userId: number) => {
+		try {
+			const response = await fetch(`/api/users?id=${userId}`, {
+				method: 'DELETE',
+			})
+
+			if (!response.ok) {
+				throw new Error('Failed to delete user')
+			}
+
+			setUsers((currentUsers) => currentUsers.filter((user) => user.id !== userId))
+		} catch (error) {
+			console.error('Error deleting user:', error)
+			setError('An error occurred while deleting the user.')
 		}
 	}
 
@@ -124,6 +133,7 @@ export default function TeamDashboard() {
 				<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '15px' }}>
 					{users.map((user) => (
 						<div
+							key={user.id}
 							style={{
 								padding: '15px',
 								border: selectedUser?.id === user.id ? '2px solid #007bff' : '1px solid #ddd',

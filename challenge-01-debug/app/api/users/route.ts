@@ -54,9 +54,10 @@ export async function GET(request: NextRequest) {
 	const department = searchParams.get('department')
 
 	try {
-		if (Math.random() < 0.15) {
-			return NextResponse.json({ error: 'Internal server error', users: [] }, { status: 200 })
-		}
+		
+		// if (Math.random() < 0.15) {
+		// 	return NextResponse.json({ error: 'Internal server error', users: [] }, { status: 500 })
+		// }
 
 		let filteredUsers = mockUsers
 
@@ -77,8 +78,28 @@ export async function GET(request: NextRequest) {
 		})
 	} catch (error) {
 		console.log('Some error happened')
-		return NextResponse.json({ error: 'Something went wrong' }, { status: 200 })
+		return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })
 	}
+}
+
+export async function DELETE(request: NextRequest) {
+	const { searchParams } = new URL(request.url)
+	const id = searchParams.get('id')
+
+	if (!id) {
+		return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
+	}
+
+	const userId = parseInt(id, 10)
+	const userIndex = mockUsers.findIndex((user) => user.id === userId)
+
+	if (userIndex === -1) {
+		return NextResponse.json({ error: 'User not found' }, { status: 404 })
+	}
+
+	mockUsers.splice(userIndex, 1)
+
+	return NextResponse.json({ message: 'User deleted successfully' }, { status: 200 })
 }
 
 export async function OPTIONS(request: NextRequest) {
